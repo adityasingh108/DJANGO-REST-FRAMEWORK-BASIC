@@ -1,8 +1,14 @@
 from django.http.response import HttpResponse, JsonResponse
 from django.shortcuts import render
+from rest_framework import serializers
 from . models import Student
 from .serializers import Studentserializers
 from rest_framework.renderers import JSONRenderer
+from rest_framework.parsers import JSONParser
+
+from django.views.decorators.csrf import csrf_exempt
+import io
+
 
 # Create your views here.
 
@@ -30,3 +36,20 @@ def studentInfo(request):
     # METHOD ++ 2
     
     return JsonResponse(serialzer.data,safe=False)
+
+@csrf_exempt
+def CreateStudentInfo(request):
+    if request.method == 'POST':
+        json_data = request.body
+        stream = io.BytesIO(json_data)
+        python_data = JSONParser().parse(stream)
+        serializers = Studentserializers(data = python_data)
+        if serializers.is_valid():
+            serializers.save()
+            res = {'Message ':'Data has been created'}
+            return JsonResponse(res)
+        else:
+            return JsonResponse(serializers.errors)
+        
+    
+        
