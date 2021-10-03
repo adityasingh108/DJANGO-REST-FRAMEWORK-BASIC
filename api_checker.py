@@ -14,20 +14,20 @@ def get_data(id = None):
     print(data)
     
     
-get_data(5)        
+# get_data(5)        
 
 def post_data():
     data = {
-        'name':'heyIm',
-        'RollNo':15,
-        'city':'delhi'
+        'name':'Raunak',
+        'RollNo':10,
+        'city':'Gujarat'
     }
     json_data = json.dumps(data)
     r = requests.post(url = url,data=json_data)
     data = r.json()
     print(data)
     
-# post_data()
+post_data()
 
 
 
@@ -57,5 +57,5 @@ def delete_data(id):
     data = r.json()
     print(data)  
     
-    
-# delete_data(3)    
+# a = int(input("enter id"))   
+# delete_data(int(input("Enter Id")))    

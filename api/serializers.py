@@ -1,9 +1,16 @@
+import re
+from django.core.exceptions import ValidationError
 from rest_framework import serializers
 from .models import Student
 
 
+# VALIDATIORS 
+def start_with_r(value):
+    if value[0].lower() != 'r':
+        raise ValidationError('Name must be star with R')
+    return value
 class Studentserializers(serializers.Serializer):
-    name = serializers.CharField(max_length=50)
+    name = serializers.CharField(max_length=50 ,validators=[start_with_r])
     city = serializers.CharField(max_length=100)
     RollNo = serializers.IntegerField()
     
@@ -16,3 +23,22 @@ class Studentserializers(serializers.Serializer):
         instance.RollNo = validated_data.get('RollNo', instance.RollNo)
         instance.save()
         return instance
+    
+    
+    
+    ############### FIELD LEVEL VALIDATION ############
+
+    def validate_RollNo(self,value):
+        '''# FIELD LEVEL VALIDATION '''
+        if value >=100:
+            raise serializers.ValidationError('seat Full')
+        return value    
+
+
+    ################ OBJECT LEVEL VALIDATION ######
+    def validate(self,data):
+        name = data.get('name')        
+        city = data.get('city') 
+        if name.lower() == 'rohit' and city.lower() != "ranchi":
+            raise serializers.ValidationError("city must be ranchi ")
+        return data       
